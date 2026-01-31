@@ -1,0 +1,123 @@
+{
+  "name": "Calender ai agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -16,
+        0
+      ],
+      "id": "2d3b330e-3366-459d-bf27-c7e7c862af4a",
+      "name": "When chat message received",
+      "webhookId": "6125e559-0062-441a-bb8c-3cb0498ab29d"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a calendar assistant.\nExtract event details from the user message.\nReturn ONLY valid JSON.\n"
+            },
+            {
+              "content": "={{$json.chatInput}}\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "113e1727-c6c1-45a7-9b54-88a61d52ebc3",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zB9KhwQi4bjXYBk5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "sravyaduvvuri2207@gmail.com",
+          "mode": "list",
+          "cachedResultName": "sravyaduvvuri2207@gmail.com"
+        },
+        "start": "={{ $now.plus(1, 'day').set({ hour: 14, minute: 0 }) }}\n",
+        "end": "={{ $now.plus(1, 'day').set({ hour: 15, minute: 0 }) }}\n",
+        "additionalFields": {
+          "description": "Created by Calendar AI Agent via chat",
+          "summary": "Meeting"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        0
+      ],
+      "id": "6faa27e3-f7dc-4053-8460-b4b29ac36a3e",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "AVW14dsHglQMUCfE",
+          "name": "Google Calendar account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "1f39e71b-d8eb-4005-afcb-b7cd49ca7b6d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "34b9d778dcd024be942af86745aa2ff403b06a99fdb16dc09221b3f5b2e9843b"
+  },
+  "id": "3hikIjga0I-gVlGrZC3w_",
+  "tags": []
+}
